@@ -38,20 +38,20 @@ public class GameProgress implements Serializable {
     }
 
     static void zipFiles(String pathToFile, List<String> pathToFileList) {
-        try (ZipOutputStream zout = new ZipOutputStream(new
-                FileOutputStream(pathToFile))) {
-            for (String tmpZip : pathToFileList) {
-                try (FileInputStream fis = new FileInputStream(tmpZip)) {
-                    ZipEntry entry = new ZipEntry(pathToFile);
-                    zout.putNextEntry(entry);
-                    byte[] buffer = new byte[fis.available()];
-                    fis.read(buffer);
-                    zout.write(buffer);
-                    zout.closeEntry();
-                }
+        try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(pathToFile))) {
+            for (String pathToZip : pathToFileList) {
+                FileInputStream fis = new FileInputStream(pathToZip);
+                File file = new File(pathToZip);
+                ZipEntry entry = new ZipEntry(file.getName());
+                zout.putNextEntry(entry);
+                byte[] buffer = new byte[fis.available()];
+                fis.read(buffer);
+                zout.write(buffer);
+                zout.closeEntry();
+                fis.close();
             }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
